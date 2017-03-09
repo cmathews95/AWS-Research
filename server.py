@@ -8,7 +8,6 @@ import random
 
 #Get Unique Instance ID                                                                                                                                      
 ID = MySQLdb.escape_string(str(os.popen("ec2-metadata -i").read()).strip('\n').strip('instance-id:').strip(' '))
-ADDRESS = "10.0.0.107"
 print  ID
 
 #Connect to db                                                                                                                                               
@@ -25,6 +24,11 @@ add_message = ("INSERT INTO messages "
                "(instanceID, message) "
                "VALUES (%s, %s)")
 
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
 def saveData(name, connection):
     # Receive the data in small chunks and retransmit it                                                                                                     
     data = MySQLdb.escape_string(connection.recv(200))
@@ -39,7 +43,7 @@ def saveData(name, connection):
 def Main():
     #Create a tcp/ip socket                                                                                                                                  
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address = (address, 8000)
+    server_address = (get_ip_address(), 8000)
     print >>sys.stderr, 'starting up on %s port %s' % server_address
     sock.bind(server_address)
 
