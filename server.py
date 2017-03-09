@@ -30,8 +30,11 @@ def get_ip_address():
     return s.getsockname()[0]
 
 def saveData(name, connection):
-    # Receive the data in small chunks and retransmit it                                                                                                     
+    # Receive the data in small chunks and retransmit it                                                                                                    
     data = MySQLdb.escape_string(connection.recv(200))
+    f= open("metrics-log.txt","w+")
+    f.write(data)
+    f.write('\n')
     print >>sys.stderr, 'received "%s"' % data
     data_message = (ID, data)
     cur.execute(add_message, data_message)
