@@ -43,8 +43,22 @@ def saveData(name, connection):
     connection.sendall("Added: " + data)
     connection.close()
 
+def healthCheck(name):
+    #Create a tcp/ip socket to accept load balancer health checks
+    lb_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    lb_address = (get_ip_address(), 4000)
+    lb_sock.bind(lb_address)
+    lb_sock.listen(5)
+    while True:
+        connection, client_address = lb_sock.accept()
+        connection.sendall("Confirm"
+        connection.close()
+    
 def Main():
-    #Create a tcp/ip socket                                                                                                                                  
+    lb_thread = threading.Thread(target=healthCheck, args=("thread"))
+    lb_thread.start()
+    
+    #Create a tcp/ip socket                                                                                                                                 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (get_ip_address(), 8000)
     print >>sys.stderr, 'starting up on %s port %s' % server_address
@@ -53,8 +67,9 @@ def Main():
     # Listen for incoming connections                                                                                                                        
     sock.listen(5)
     print "Server Started."
+
     while True:
-        # Wait for a connection                                                                                                                              
+        # Wait for a connection                                                                                                                             
         print >>sys.stderr, 'waiting for a connection'
         connection, client_address = sock.accept()
         print "client connected ip:<" + str(client_address) + ">"
