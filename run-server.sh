@@ -1,3 +1,4 @@
 #!/bin/sh
-
-python2.6 server.py
+sudo yum install python26
+sudo yum install MySQL-python
+python26 server.py
