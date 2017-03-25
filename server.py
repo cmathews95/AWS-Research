@@ -43,6 +43,7 @@ def saveData(name, connection):
     connection.sendall("Added: " + data)
     connection.close()
 
+#AWS Load Balancer Health Check Listener    
 def healthCheck(name):
     #Create a tcp/ip socket to accept load balancer health checks
     lb_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -51,7 +52,7 @@ def healthCheck(name):
     lb_sock.listen(5)
     while True:
         connection, client_address = lb_sock.accept()
-        connection.sendall("Confirm"
+        connection.sendall("Confirm")
         connection.close()
     
 def Main():
