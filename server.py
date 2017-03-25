@@ -42,7 +42,7 @@ def saveData(name, connection):
     connection.close()
 
 #AWS Load Balancer Health Check Listener
-def healthCheck(name):
+def healthCheck():
     #Create a tcp/ip socket to accept load balancer health checks
     lb_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     lb_address = (get_ip_address(), 4000)
@@ -54,26 +54,25 @@ def healthCheck(name):
         h_connection.close()
 
 def Main():
-    lb_thread = threading.Thread(target=healthCheck, args=("thread"))
-    lb_thread.start()
+    #lb_thread = threading.Thread(target=healthCheck, args=("thread"))
+    #lb_thread.start()
 
     #Create a tcp/ip socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (get_ip_address(), 8000)
     print >> sys.stderr, 'Starting server on %s port %s' % server_address
 
-    # Listen for incoming connections
-    sock.bind(server_address)
-    sock.listen(6)
     try:
+        # Listen for incoming connections
+        sock.bind(server_address)
+        sock.listen(6)
         while True:
             # Wait for a connection
-            print >>sys.stderr, 'Listening for a connection'
             connection, client_address = sock.accept()
             print "Client connected ip: <" + str(client_address) + ">"
             t = threading.Thread(target=saveData, args=("thread", connection))
             t.start()
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, SystemExit):
         cur.close()
         sock.close()
 
