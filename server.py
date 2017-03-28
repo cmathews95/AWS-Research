@@ -54,8 +54,8 @@ def healthCheck():
         h_connection.close()
 
 def Main():
-    #lb_thread = threading.Thread(target=healthCheck, args=("thread"))
-    #lb_thread.start()
+    lb_thread = threading.Thread(target=healthCheck)
+    lb_thread.start()
 
     #Create a tcp/ip socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
