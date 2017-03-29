@@ -20,11 +20,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.send_header("Set-Cookie", "foo=bar")
         
     def do_POST(self):
-        #Loops to do some random work
-        for i in range(0,W):
-            
-            for i in range(0,W):
-                for i in range(0,W):
         request_path = self.path
         
         print("\n----- Request Start ----->\n")
@@ -47,7 +42,9 @@ def main():
     port = 8000
     print('Listening on localhost:%s' % port)
     server = HTTPServer(('', port), RequestHandler)
-    server.serve_forever()
-
+    try:
+        server.serve_forever()
+    except (KeyboardInterrupt, SystemExit):
+        server.shutdown()
 if __name__ == "__main__":
     main()
